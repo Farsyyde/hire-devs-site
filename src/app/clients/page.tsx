@@ -12,23 +12,27 @@ export default function ClientsPage() {
       {/* Why Use HireDevs */}
       <section className="max-w-4xl mx-auto mt-16">
         <h2 className="text-3xl font-semibold mb-4 text-center">Why HireDevs?</h2>
-        <ul className="list-disc list-inside text-gray-300 space-y-2">
-          <li>Pre-vetted talent across Web3, fintech, AI, and more</li>
-          <li>Wallet-native or traditional contact onboarding</li>
-          <li>Flexible contracts, from hourly to full-time</li>
-          <li>Private or public matching depending on your needs</li>
-          <li>No middlemen. Just results.</li>
-        </ul>
+        <div className="max-w-xl mx-auto">
+          <ul className="list-disc list-inside text-gray-300 space-y-1">
+            <li>Pre-vetted talent across Web3, fintech, AI, and more</li>
+            <li>Wallet-native or traditional contact onboarding</li>
+            <li>Flexible contracts, from hourly to full-time</li>
+            <li>Private or public matching depending on your needs</li>
+            <li>No middlemen. Just results.</li>
+          </ul>
+        </div>
       </section>
 
       {/* How It Works */}
       <section className="max-w-4xl mx-auto mt-20">
         <h2 className="text-2xl font-semibold mb-4 text-center">How It Works</h2>
-        <ol className="list-decimal list-inside text-gray-400 space-y-2">
-          <li>Submit your project details or reach out directly</li>
-          <li>We identify top-matching developers from our network</li>
-          <li>You connect and kick off — fast and frictionless</li>
-        </ol>
+        <div className="max-w-xl mx-auto">
+          <ol className="list-decimal list-inside text-gray-400 space-y-1">
+            <li>Submit your project details or reach out directly</li>
+            <li>We identify top-matching developers from our network</li>
+            <li>You connect and kick off — fast and frictionless</li>
+          </ol>
+        </div>
       </section>
 
       {/* CTA */}
@@ -40,7 +44,7 @@ export default function ClientsPage() {
           Get Started – Contact Us
         </a>
         <p className="text-sm text-gray-500 mt-2 italic">
-          We’ll respond within 24 hours or faster.
+          We'll respond within 24 hours or faster.
         </p>
       </section>
     </main>
