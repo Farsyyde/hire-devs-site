@@ -14,6 +14,7 @@ export default function DevelopersPage() {
         <h2 className="text-3xl font-semibold mb-4 text-white text-center">
           How It Works
         </h2>
+<<<<<<< HEAD
         <div className="max-w-xl mx-auto">
           <div className="space-y-4 text-gray-300 text-md">
             <div>
@@ -25,6 +26,17 @@ export default function DevelopersPage() {
             <div>
               <strong>3. Build:</strong> Ship meaningful work, get paid, and grow your visibility.
             </div>
+=======
+        <div className="space-y-6 text-gray-300 text-md text-center">
+          <div>
+            <strong>1. Connect:</strong> Login with wallet or email and create your dev profile.
+          </div>
+          <div>
+            <strong>2. Match:</strong> We match you with projects, startups, and founders that need your skills.
+          </div>
+          <div>
+            <strong>3. Build:</strong> Ship meaningful work, get paid, and grow your visibility.
+>>>>>>> c4021ed (Update Navbar and Premium page with wallet & Firebase login integration)
           </div>
         </div>
       </section>
@@ -34,6 +46,7 @@ export default function DevelopersPage() {
         <h2 className="text-2xl font-semibold mb-4 text-white text-center">
           Why Developers Love HireDevs
         </h2>
+<<<<<<< HEAD
         <div className="max-w-xl mx-auto">
           <ul className="list-disc list-inside text-gray-300 space-y-1">
             <li>Serious projects only — we vet every request</li>
@@ -42,6 +55,15 @@ export default function DevelopersPage() {
             <li>Premium access via #token2050</li>
           </ul>
         </div>
+=======
+        <ul className="list-disc list-inside text-gray-300 space-y-2 text-center">
+          <li>Serious projects only. We vet every request</li>
+          <li>Wallet-native. Connect, sign, and go</li>
+          <li>Investor visibility. Public profiles (optional)</li>
+          <li>Premium access via #token2050</li>
+          <li>No fees. No middlemen. No fluff.</li>
+        </ul>
+>>>>>>> c4021ed (Update Navbar and Premium page with wallet & Firebase login integration)
       </section>
 
       {/* CTA */}

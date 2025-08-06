@@ -1,4 +1,42 @@
+"use client";
+
+import { useEffect, useState } from "react";
+import { onAuthStateChanged, User } from "firebase/auth";
+import { auth } from "@/lib/firebase";
+import { useWallet } from "@solana/wallet-adapter-react";
+import { WalletMultiButton } from "@solana/wallet-adapter-react-ui";
+import { checkToken2050Holding } from "@/lib/checkTokenHolding";
+
 export default function PremiumPage() {
+  const { publicKey } = useWallet();
+  const [firebaseUser, setFirebaseUser] = useState<User | null>(null);
+  const [hasAccess, setHasAccess] = useState<boolean | null>(null); // null = loading
+
+  useEffect(() => {
+    const unsub = onAuthStateChanged(auth, (user) => {
+      setFirebaseUser(user);
+    });
+    return () => unsub();
+  }, []);
+
+  useEffect(() => {
+    const verifyAccess = async () => {
+      if (!publicKey && !firebaseUser) {
+        setHasAccess(false);
+        return;
+      }
+
+      if (publicKey) {
+        const holdsToken = await checkToken2050Holding(publicKey);
+        setHasAccess(holdsToken || !!firebaseUser); // Either token or Firebase = access
+      } else {
+        setHasAccess(!!firebaseUser);
+      }
+    };
+
+    verifyAccess();
+  }, [publicKey, firebaseUser]);
+
   return (
     <main className="min-h-screen bg-[#0D1117] text-white px-6 py-12">
       {/* Header */}
@@ -16,7 +54,7 @@ export default function PremiumPage() {
           <li>Investor-focused public developer profile</li>
           <li>Access to premium blog + dev resources</li>
           <li>Subscriber-only newsletter drops</li>
-          <li>No data selling, ever — your trust matters</li>
+          <li>No data selling, ever! Your trust matters</li>
           <li>Priority placement for incoming projects</li>
         </ul>
       </section>
@@ -36,19 +74,28 @@ export default function PremiumPage() {
         </div>
       </section>
 
-      {/* CTA */}
+      {/* Conditional CTA */}
       <section className="max-w-4xl mx-auto mt-16 text-center">
-        <a
-          href="/auth"
-          className="bg-violet-600 hover:bg-violet-700 text-white px-8 py-3 rounded-md shadow-lg transition duration-300"
-        >
-          Go Premium – Connect Wallet or Subscribe
-        </a>
-        <p className="text-sm text-gray-500 mt-2 italic">
-          Holding the token = instant access. No need to do both.
-        </p>
+        {hasAccess === null ? (
+          <div className="text-gray-400 italic">Checking access...</div>
+        ) : hasAccess ? (
+          <div className="bg-green-800 text-white p-6 rounded-md shadow-lg">
+            <h3 className="text-xl font-bold">Access Granted</h3>
+            <p>
+              You're verified! Premium features are now unlocked based on your wallet or login.
+            </p>
+          </div>
+        ) : (
+          <>
+            <WalletMultiButton className="!bg-violet-600 hover:!bg-violet-700 text-white px-8 py-3 rounded-md shadow-lg transition duration-300" />
+            <p className="text-sm text-gray-500 mt-2 italic">
+              Holding the token = instant access. No need to do both.
+            </p>
+          </>
+        )}
       </section>
     </main>
   );
 }
+
 

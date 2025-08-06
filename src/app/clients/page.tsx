@@ -5,7 +5,7 @@ export default function ClientsPage() {
       <section className="max-w-4xl mx-auto text-center">
         <h1 className="text-5xl font-bold mb-4">Hire Smarter, Ship Faster</h1>
         <p className="text-lg text-gray-400">
-          Connect with vetted developers ready to build — without the agency bloat or hiring headache.
+          Connect with vetted developers ready to build, without the agency bloat or hiring headache.
         </p>
       </section>
 

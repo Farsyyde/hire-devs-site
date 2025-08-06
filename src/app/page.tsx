@@ -56,7 +56,7 @@ export default function Home() {
         <p className="text-gray-400 text-md">
           HireDevs is a next-gen talent matchmaking platform that connects top developers with the
           most ambitious teams in Web3, AI, fintech, and emerging tech. Whether you're looking to
-          hire fast or get staffed on meaningful projects — we make the process seamless, verified,
+          hire fast or get staffed on meaningful projects, we make the process seamless, verified,
           and community-driven.
         </p>
 
