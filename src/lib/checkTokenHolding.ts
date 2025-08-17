@@ -1,51 +1,84 @@
 // src/lib/checkTokenHolding.ts
 import { Connection, PublicKey } from "@solana/web3.js";
-import { getAssociatedTokenAddress, getAccount } from "@solana/spl-token";
+import {
+  getAssociatedTokenAddress,
+  getAccount,
+  getMint,
+} from "@solana/spl-token";
 
-// RPC: your Helius key or fallback
+// -------------- Config --------------
 const RPC_ENDPOINT =
-  process.env.NEXT_PUBLIC_SOLANA_RPC || "https://api.mainnet-beta.solana.com";
+  (process.env.NEXT_PUBLIC_SOLANA_RPC || "").trim() ||
+  "https://api.mainnet-beta.solana.com";
 
-// Mint from env (required)
-const MINT_STR = process.env.NEXT_PUBLIC_TOKEN2050_MINT;
-if (!MINT_STR) {
+// IMPORTANT: This must be the *mint address* of the 2050 token
+const RAW_MINT = (process.env.NEXT_PUBLIC_TOKEN2050_MINT || "").trim();
+if (!RAW_MINT) {
   throw new Error(
-    "Missing NEXT_PUBLIC_TOKEN2050_MINT in .env.local (must be a valid token mint address)."
+    "Missing NEXT_PUBLIC_TOKEN2050_MINT in env (must be a SPL token mint address)"
   );
 }
 
-// Validate the mint once at module load
 let TOKEN_MINT: PublicKey;
 try {
-  TOKEN_MINT = new PublicKey(MINT_STR);
+  TOKEN_MINT = new PublicKey(RAW_MINT);
 } catch {
   throw new Error(
-    `NEXT_PUBLIC_TOKEN2050_MINT is not a valid Solana public key: "${MINT_STR}"`
+    `NEXT_PUBLIC_TOKEN2050_MINT is not a valid Solana public key: "${RAW_MINT}"`
   );
 }
 
-// 2.5M tokens (adjust anytime)
+// How many tokens required (human units, not raw)
 export const MIN_TOKENS = 2_500_000;
-const DECIMALS = 9; // most SPL tokens
 
-export async function checkToken2050Holding(walletAddress: PublicKey): Promise<{
-  isPremium: boolean;
-  amount: number; // human-readable (decimals applied)
-}> {
-  const connection = new Connection(RPC_ENDPOINT, "confirmed");
+// -------------- Helpers --------------
+
+// Cache decimals & connection so we don’t refetch every call
+let _cachedDecimals: number | null = null;
+let _connection: Connection | null = null;
+
+function conn(): Connection {
+  if (!_connection) _connection = new Connection(RPC_ENDPOINT, "confirmed");
+  return _connection;
+}
+
+/**
+ * Fetch token decimals once and cache.
+ * Falls back to 6 if anything odd happens (your token is 6 decimals).
+ */
+async function getTokenDecimals(): Promise<number> {
+  if (_cachedDecimals !== null) return _cachedDecimals;
+  try {
+    const mintInfo = await getMint(conn(), TOKEN_MINT);
+    _cachedDecimals = mintInfo.decimals ?? 6;
+  } catch {
+    // Safe fallback for your token
+    _cachedDecimals = 6;
+  }
+  return _cachedDecimals;
+}
+
+// -------------- Main API --------------
+
+export async function checkToken2050Holding(
+  walletAddress: PublicKey
+): Promise<{ isPremium: boolean; amount: number }> {
+  const connection = conn();
 
   try {
-    // Associated Token Account for this mint & wallet
+    // Get the user’s ATA for this mint
     const ata = await getAssociatedTokenAddress(TOKEN_MINT, walletAddress, false);
     const tokenAccount = await getAccount(connection, ata);
 
-    // Normalize using decimals
-    const raw = BigInt(tokenAccount.amount.toString()); // safe for big balances
-    const amount = Number(raw) / 10 ** DECIMALS;
+    const decimals = await getTokenDecimals();
 
-    return { isPremium: amount >= MIN_TOKENS, amount };
-  } catch (err) {
-    // Most common case: no ATA exists -> balance = 0
+    // Convert raw bigint -> human amount
+    const raw = BigInt(tokenAccount.amount.toString());
+    const human = Number(raw) / 10 ** decimals;
+
+    return { isPremium: human >= MIN_TOKENS, amount: human };
+  } catch {
+    // Most common case: user does not have an ATA -> treat as 0 balance
     return { isPremium: false, amount: 0 };
   }
 }
