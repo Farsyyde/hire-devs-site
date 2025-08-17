@@ -1,8 +1,14 @@
+// src/app/layout.tsx
 import type { Metadata } from "next";
 import { Geist, Geist_Mono } from "next/font/google";
 import "./globals.css";
+
 import Navbar from "../components/Navbar";
-import { WalletContextProvider } from "../context/WalletConnect"; // ✅ Make sure this path is correct
+import { WalletContextProvider } from "../context/WalletConnect";
+
+// ✅ New: session + onboarding
+import SessionBootstrapper from "../components/SessionBootstrapper";
+import OnboardingGate from "../components/OnboardingGate";
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -28,6 +34,11 @@ export default function RootLayout({
     <html lang="en" className={`${geistSans.variable} ${geistMono.variable}`}>
       <body>
         <WalletContextProvider>
+          {/* Creates/merges user profile on login */}
+          <SessionBootstrapper />
+          {/* Pops role picker if user has no role yet */}
+          <OnboardingGate />
+
           <Navbar />
           {children}
         </WalletContextProvider>

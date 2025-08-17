@@ -1,4 +1,25 @@
+"use client";
+
+import Link from "next/link";
+import { useState } from "react";
+import { useAuthState } from "react-firebase-hooks/auth";
+import { useRouter } from "next/navigation";
+import { auth } from "@/lib/firebase";
+import AuthModal from "@/components/AuthModal";
+
 export default function DevelopersPage() {
+  const [authModalOpen, setAuthModalOpen] = useState(false);
+  const [user] = useAuthState(auth);
+  const router = useRouter();
+
+  const handleGetStarted = () => {
+    if (user) {
+      router.push("/developers/dashboard");
+    } else {
+      setAuthModalOpen(true);
+    }
+  };
+
   return (
     <main className="min-h-screen bg-[#0D1117] text-white px-6 py-12">
       {/* Header Section */}
@@ -14,7 +35,6 @@ export default function DevelopersPage() {
         <h2 className="text-3xl font-semibold mb-4 text-white text-center">
           How It Works
         </h2>
-<<<<<<< HEAD
         <div className="max-w-xl mx-auto">
           <div className="space-y-4 text-gray-300 text-md">
             <div>
@@ -26,17 +46,6 @@ export default function DevelopersPage() {
             <div>
               <strong>3. Build:</strong> Ship meaningful work, get paid, and grow your visibility.
             </div>
-=======
-        <div className="space-y-6 text-gray-300 text-md text-center">
-          <div>
-            <strong>1. Connect:</strong> Login with wallet or email and create your dev profile.
-          </div>
-          <div>
-            <strong>2. Match:</strong> We match you with projects, startups, and founders that need your skills.
-          </div>
-          <div>
-            <strong>3. Build:</strong> Ship meaningful work, get paid, and grow your visibility.
->>>>>>> c4021ed (Update Navbar and Premium page with wallet & Firebase login integration)
           </div>
         </div>
       </section>
@@ -46,7 +55,6 @@ export default function DevelopersPage() {
         <h2 className="text-2xl font-semibold mb-4 text-white text-center">
           Why Developers Love HireDevs
         </h2>
-<<<<<<< HEAD
         <div className="max-w-xl mx-auto">
           <ul className="list-disc list-inside text-gray-300 space-y-1">
             <li>Serious projects only — we vet every request</li>
@@ -55,29 +63,24 @@ export default function DevelopersPage() {
             <li>Premium access via #token2050</li>
           </ul>
         </div>
-=======
-        <ul className="list-disc list-inside text-gray-300 space-y-2 text-center">
-          <li>Serious projects only. We vet every request</li>
-          <li>Wallet-native. Connect, sign, and go</li>
-          <li>Investor visibility. Public profiles (optional)</li>
-          <li>Premium access via #token2050</li>
-          <li>No fees. No middlemen. No fluff.</li>
-        </ul>
->>>>>>> c4021ed (Update Navbar and Premium page with wallet & Firebase login integration)
       </section>
 
       {/* CTA */}
       <section className="max-w-4xl mx-auto mt-16 text-center">
-        <a
-          href="/auth"
+        <button
+          onClick={handleGetStarted}
           className="bg-violet-600 hover:bg-violet-700 text-white px-8 py-3 rounded-md shadow-lg transition duration-300"
         >
-          Get Started – Connect Wallet or Email
-        </a>
+          {user ? "Go to Dashboard" : "Get Started – Connect Wallet or Email"}
+        </button>
         <p className="text-sm text-gray-500 mt-2 italic">
           Your profile is private unless you opt into public visibility.
         </p>
       </section>
+
+      {/* Auth Modal */}
+      {authModalOpen && <AuthModal onClose={() => setAuthModalOpen(false)} />}
     </main>
   );
 }
+

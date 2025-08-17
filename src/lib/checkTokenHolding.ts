@@ -1,22 +1,51 @@
+// src/lib/checkTokenHolding.ts
 import { Connection, PublicKey } from "@solana/web3.js";
-import { getAssociatedTokenAddress, getAccount, TOKEN_PROGRAM_ID } from "@solana/spl-token";
+import { getAssociatedTokenAddress, getAccount } from "@solana/spl-token";
 
-const TOKEN_MINT = new PublicKey("CcFvvawbp6YoBae4mUZZb5X9W5aXw8iWqqBR2eNGbonk"); 
+// RPC: your Helius key or fallback
+const RPC_ENDPOINT =
+  process.env.NEXT_PUBLIC_SOLANA_RPC || "https://api.mainnet-beta.solana.com";
 
-export async function checkToken2050Holding(walletAddress: PublicKey): Promise<boolean> {
-  const connection = new Connection("https://api.mainnet-beta.solana.com"); // Or your cluster
-  
+// Mint from env (required)
+const MINT_STR = process.env.NEXT_PUBLIC_TOKEN2050_MINT;
+if (!MINT_STR) {
+  throw new Error(
+    "Missing NEXT_PUBLIC_TOKEN2050_MINT in .env.local (must be a valid token mint address)."
+  );
+}
+
+// Validate the mint once at module load
+let TOKEN_MINT: PublicKey;
+try {
+  TOKEN_MINT = new PublicKey(MINT_STR);
+} catch {
+  throw new Error(
+    `NEXT_PUBLIC_TOKEN2050_MINT is not a valid Solana public key: "${MINT_STR}"`
+  );
+}
+
+// 2.5M tokens (adjust anytime)
+export const MIN_TOKENS = 2_500_000;
+const DECIMALS = 9; // most SPL tokens
+
+export async function checkToken2050Holding(walletAddress: PublicKey): Promise<{
+  isPremium: boolean;
+  amount: number; // human-readable (decimals applied)
+}> {
+  const connection = new Connection(RPC_ENDPOINT, "confirmed");
+
   try {
-    const associatedTokenAddress = await getAssociatedTokenAddress(
-      TOKEN_MINT,
-      walletAddress
-    );
+    // Associated Token Account for this mint & wallet
+    const ata = await getAssociatedTokenAddress(TOKEN_MINT, walletAddress, false);
+    const tokenAccount = await getAccount(connection, ata);
 
-    const tokenAccount = await getAccount(connection, associatedTokenAddress);
+    // Normalize using decimals
+    const raw = BigInt(tokenAccount.amount.toString()); // safe for big balances
+    const amount = Number(raw) / 10 ** DECIMALS;
 
-    return Number(tokenAccount.amount) > 0;
-  } catch (error) {
-    // User probably doesn't have the token account
-    return false;
+    return { isPremium: amount >= MIN_TOKENS, amount };
+  } catch (err) {
+    // Most common case: no ATA exists -> balance = 0
+    return { isPremium: false, amount: 0 };
   }
 }
