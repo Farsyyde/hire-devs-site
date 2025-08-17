@@ -1,8 +1,8 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import { onAuthStateChanged } from "firebase/auth";
 import type { User } from "firebase/auth";
+import { onAuthStateChanged } from "firebase/auth";
 import { auth } from "@/lib/firebase";
 import { useWallet } from "@solana/wallet-adapter-react";
 import { WalletMultiButton } from "@solana/wallet-adapter-react-ui";
@@ -46,6 +46,7 @@ export default function PremiumPage() {
             setHasAccess(isPremium || !!firebaseUser);
           }
         } catch {
+          // If the check fails (e.g. bad env), still allow Firebase subscribers
           if (!cancelled) {
             setHasAccess(!!firebaseUser);
             setWalletBalance(null);
@@ -132,3 +133,4 @@ export default function PremiumPage() {
     </main>
   );
 }
+
