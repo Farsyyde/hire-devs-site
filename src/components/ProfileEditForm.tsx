@@ -207,7 +207,7 @@ export default function ProfileEditForm({ initial, onSave }: Props) {
         </div>
 
         <div>
-          <label className="block text-sm text-gray-400 mb-1">Hourly rate (USD)</label>
+          <label className="block text-sm text-gray-400 mb-1">Please set your hourly rate (USD)</label>
           <input
             type="number"
             className="w-full rounded bg-[#0F1420] border border-gray-800 p-2"
