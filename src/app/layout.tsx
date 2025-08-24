@@ -1,28 +1,17 @@
-// src/app/layout.tsx
 import type { Metadata } from "next";
-import { Geist, Geist_Mono } from "next/font/google";
+import { Inter } from "next/font/google";
 import "./globals.css";
 
 import Navbar from "../components/Navbar";
-import { WalletContextProvider } from "../context/WalletConnect";
 
-// ✅ New: session + onboarding
-import SessionBootstrapper from "../components/SessionBootstrapper";
-import OnboardingGate from "../components/OnboardingGate";
-
-const geistSans = Geist({
-  variable: "--font-geist-sans",
+const inter = Inter({
   subsets: ["latin"],
-});
-
-const geistMono = Geist_Mono({
-  variable: "--font-geist-mono",
-  subsets: ["latin"],
+  variable: "--font-inter",
 });
 
 export const metadata: Metadata = {
-  title: "HireDevs",
-  description: "Talent that builds. Results that scale.",
+  title: "LaunchKit - Launch faster. Grow smarter.",
+  description: "LaunchKit gives founders the essential tools to go from idea to business: MVP development, business formation, funding resources, and marketing support — all in one place.",
 };
 
 export default function RootLayout({
@@ -31,17 +20,10 @@ export default function RootLayout({
   children: React.ReactNode;
 }) {
   return (
-    <html lang="en" className={`${geistSans.variable} ${geistMono.variable}`}>
-      <body>
-        <WalletContextProvider>
-          {/* Creates/merges user profile on login */}
-          <SessionBootstrapper />
-          {/* Pops role picker if user has no role yet */}
-          <OnboardingGate />
-
-          <Navbar />
-          {children}
-        </WalletContextProvider>
+    <html lang="en" className={inter.variable}>
+      <body className="font-sans antialiased">
+        <Navbar />
+        {children}
       </body>
     </html>
   );

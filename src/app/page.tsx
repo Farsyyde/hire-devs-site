@@ -1,69 +1,85 @@
-"use client";
+import Link from "next/link";
 
-import { useEffect, useState } from "react";
-
-export default function Home() {
-  const [show, setShow] = useState(false);
-
-  useEffect(() => {
-    const timeout = setTimeout(() => setShow(true), 100);
-    return () => clearTimeout(timeout);
-  }, []);
-
+export default function HomePage() {
   return (
-    <main className="relative flex flex-col items-center justify-center min-h-screen bg-[#0D1117] text-white px-4 overflow-hidden">
-      {/* Background logo */}
-      <img
-        src="/logo.png"
-        alt="HireDevs Logo"
-        className="absolute w-[600px] h-[600px] opacity-20 blur-sm pointer-events-none"
-        style={{ zIndex: 0 }}
-      />
-
-      {/* Main Glassy Hero */}
-      <div
-        className={`z-10 bg-white/5 backdrop-blur-sm rounded-xl px-8 py-10 text-center transition-all duration-700 ease-out transform shadow-lg max-w-2xl ${
-          show ? "opacity-100 translate-y-0" : "opacity-0 translate-y-5"
-        }`}
-      >
-        <h1 className="text-5xl font-bold">HireDevs</h1>
-        <p className="mt-2 text-lg text-gray-400">
-          Talent that builds. Results that scale.
-        </p>
-        <p className="mt-1 text-sm text-gray-500 italic">
-          Are you looking to hire developers or get placed on a project?
-        </p>
-
-        <div className="mt-6 flex flex-col sm:flex-row gap-4 justify-center">
-          <a
-            href="/developers"
-            className="bg-violet-600 hover:bg-violet-700 text-white px-6 py-2 rounded-md transition duration-300 shadow-md hover:shadow-violet-500/50"
-          >
-            For Developers
-          </a>
-          <a
-            href="/clients"
-            className="bg-gray-700 hover:bg-gray-800 text-white px-6 py-2 rounded-md transition duration-300 shadow-md hover:shadow-gray-500/40"
-          >
-            For Clients
-          </a>
+    <main>
+      {/* Hero Section */}
+      <section className="bg-white py-20 px-6">
+        <div className="max-w-6xl mx-auto text-center">
+          <h1 className="text-5xl md:text-6xl font-bold mb-6 gradient-text">
+            Launch faster. Grow smarter.
+          </h1>
+          <p className="text-xl text-gray-600 mb-8 max-w-3xl mx-auto">
+            LaunchKit gives founders the essential tools to go from idea to business: MVP development, business formation, funding resources, and marketing support — all in one place.
+          </p>
+          <Link href="/contact" className="btn-primary text-lg">
+            Get Started with LaunchKit
+          </Link>
         </div>
-      </div>
+      </section>
 
-      {/* Extended Description */}
-      <div className="mt-16 max-w-3xl text-center z-10">
-        <h2 className="text-2xl font-semibold mb-4 text-white">What is HireDevs?</h2>
-        <p className="text-gray-400 text-md">
-          HireDevs is a next-gen talent matchmaking platform that connects top developers with the
-          most ambitious teams in Web3, AI, fintech, and emerging tech. Whether you're looking to
-          hire fast or get staffed on meaningful projects, we make the process seamless, verified,
-          and community-driven.
-        </p>
+      {/* What We Do Section */}
+      <section className="section-gray py-20 px-6">
+        <div className="max-w-6xl mx-auto">
+          <h2 className="text-4xl font-semibold text-center mb-16">What We Do</h2>
+          <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-8">
+            <div className="bg-white p-8 rounded-lg shadow-sm">
+              <div className="w-12 h-12 bg-spotify-green rounded-lg mb-4 flex items-center justify-center">
+                <span className="text-white font-bold text-xl">🚀</span>
+              </div>
+              <h3 className="text-xl font-semibold mb-3">Build Your MVP</h3>
+              <p className="text-gray-600">Turn your idea into a working product fast.</p>
+            </div>
+            
+            <div className="bg-white p-8 rounded-lg shadow-sm">
+              <div className="w-12 h-12 bg-spotify-green rounded-lg mb-4 flex items-center justify-center">
+                <span className="text-white font-bold text-xl">🏢</span>
+              </div>
+              <h3 className="text-xl font-semibold mb-3">Form Your Business</h3>
+              <p className="text-gray-600">LLC or C-Corp — we guide you through setup.</p>
+            </div>
+            
+            <div className="bg-white p-8 rounded-lg shadow-sm">
+              <div className="w-12 h-12 bg-spotify-green rounded-lg mb-4 flex items-center justify-center">
+                <span className="text-white font-bold text-xl">💰</span>
+              </div>
+              <h3 className="text-xl font-semibold mb-3">Secure Funding Resources</h3>
+              <p className="text-gray-600">Investor decks, templates, and curated connections.</p>
+            </div>
+            
+            <div className="bg-white p-8 rounded-lg shadow-sm">
+              <div className="w-12 h-12 bg-spotify-green rounded-lg mb-4 flex items-center justify-center">
+                <span className="text-white font-bold text-xl">📈</span>
+              </div>
+              <h3 className="text-xl font-semibold mb-3">Marketing That Scales</h3>
+              <p className="text-gray-600">Copy, pitch decks, and branding tools that get attention.</p>
+            </div>
+          </div>
+        </div>
+      </section>
 
-        <p className="mt-4 text-sm text-gray-600 italic">
-          No noise. Just skill-matched talent for teams that ship.
-        </p>
-      </div>
+      {/* Why LaunchKit Section */}
+      <section className="bg-white py-20 px-6">
+        <div className="max-w-4xl mx-auto text-center">
+          <h2 className="text-4xl font-semibold mb-8">Why LaunchKit?</h2>
+          <p className="text-xl text-gray-600 mb-8">
+            Launching a startup is hard. Most founders waste time juggling multiple platforms and providers. LaunchKit brings it all together — a single kit to launch with clarity and confidence.
+          </p>
+        </div>
+      </section>
+
+      {/* Final CTA Section */}
+      <section className="bg-black py-20 px-6">
+        <div className="max-w-4xl mx-auto text-center">
+          <h2 className="text-4xl font-semibold mb-4 text-white">Ready to Launch?</h2>
+          <p className="text-xl text-gray-300 mb-8">
+            Startups move fast — your launch should too.
+          </p>
+          <Link href="/contact" className="btn-primary text-lg">
+            Get Started Today
+          </Link>
+        </div>
+      </section>
     </main>
   );
 }
